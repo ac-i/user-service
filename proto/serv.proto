@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package proto.serv;
+
+import "github.com/ac-i/user-service/proto/model.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/ac-i/user-service/proto/serv";
+
+service User {
+  // GetList fetches all users or filters by query parameter ?active=false|true
+  // overcoming false vs empty of a boolean type variant by using string
+  // active=false|true|'' - to filter false or true or all
+  // PLUS DEV MODE TESTS: active=dev-db-mockup|dev-db-truncate
+  rpc GetList(model.UserSelect) returns (model.Users) {
+    option (google.api.http) = {
+        get: "/users"
+    };
+  }
+  // Del - deletes record by userid
+  // returns deleted record or error message
+  rpc Del(model.User) returns (model.User) {
+    option (google.api.http) = {
+        delete: "/users/{userid}"
+    };
+  }
+  // Add - adds user record, require name!='', field active=true is optional
+  // userid is calculated by db (at save transaction as max value + 1)
+  rpc Add(model.User) returns (model.User) {
+    option (google.api.http) = {
+        post: "/users"
+        body: "*"
+    };
+  }
+}
+
+// [GET] - '/users?active=false|true'.
+// Fetches all users from the database 
+// and return them in 'application/json' format.
+// It would take one optional 'query parameter' 
+// called 'active'(boolean type). 
+// If provided return only users with 'active' field set to 
+// given value true or false, if not - return all users.
+// [DELETE] - '/users/{user_id}'
+// Deletes user with 'user_id' provided as 'path parameter'
+// [POST] - '/users'
+// Creates new user. request body: {name string, active boolean}, 
+// and returns full user data{name, user_id, active}
+// UserID should be generated either by you or by database.
+// USER structure:
+// UserID (type up to you)
+// Active bool
+// Name string

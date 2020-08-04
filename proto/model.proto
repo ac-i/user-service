@@ -1,0 +1,37 @@
+syntax = "proto3";
+package proto.model;
+
+option go_package = "github.com/ac-i/user-service/proto/model";
+
+// message Empty {}
+
+// User - USER structure: UserID int32, Active bool, Name string
+message User {
+  int32 userid = 1;
+  bool active = 2;
+  string name = 3;
+}
+
+// message UserSelect - overcoming false vs nil/empty of a boolean type variant
+// PLUS DEV MODE TESTS: active=dev-db-mockup|dev-db-truncate
+message UserSelect {
+  // using string to simulate nil of a bool
+  // active=false|true|'' - to filter false or true or all
+  // PLUS DEV MODE TESTS: active=dev-db-mockup|dev-db-truncate
+  string active = 4;
+}
+
+// message Users - overcoming limitations of rest to perform stream
+message Users {
+  repeated User users = 1;
+}
+
+// https://developers.google.com/protocol-buffers/docs/proto3
+// https://grpc-ecosystem.github.io/grpc-gateway/docs/usage.html
+// https://cloud.google.com
+// /service-infrastructure/docs/service-management/reference/rpc/google.api#http
+// HTTP	
+// GET /v1/messages/123456?revision=2&sub.subfield=foo
+// gRPC
+// GetMessage(message_id: "123456" revision: 2 sub: SubMessage(subfield: "foo"))
+// https://cloud.google.com/endpoints/docs/grpc/grpc-service-config

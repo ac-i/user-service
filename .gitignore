@@ -1,3 +1,4 @@
+### GO ###
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -13,3 +14,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+### Code ###
+.vscode
+
+*.db
+*.7z
+cert
+debug-tmp.go
